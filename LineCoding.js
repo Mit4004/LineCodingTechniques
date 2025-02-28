@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Draw a line segment with a short delay
     function drawSmoothLine(x1, y1, x2, y2, callback, animId) {
       let progress = 0;
-      ctx.strokeStyle = "#FF4500";  // Change waveform color to Orange-Red
+      ctx.strokeStyle = "#000000";  
       ctx.lineWidth = 2;  // Make the waveform thicker for visibility
       
       function animate() {
