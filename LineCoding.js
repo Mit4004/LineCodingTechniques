@@ -1,5 +1,8 @@
+let binaryDataLength = 0;
+let currentUnitWidth = 0;
 document.addEventListener("DOMContentLoaded", function () {
     // DOM Elements
+
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const select = document.getElementById("codingSelect");
@@ -327,12 +330,10 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // --- Update function: validate input, run animation, and update info ---
     function update() {
-      const leftMargin = 30;
-      const rightMargin = 10;
-      binaryDataLength = binaryData.length;
-      currentUnitWidth = (width - (leftMargin + rightMargin)) / binaryDataLength;
-      currentAnim++; // Cancel ongoing animations
+      currentAnim++; // Cancel any ongoing animations
       const binaryData = inputField.value.trim();
+      
+      // Validate input
       if (!/^[01]+$/.test(binaryData) || binaryData === "") {
           errorMsg.textContent = "Invalid input! Please enter only 0s and 1s.";
           infoBox.innerHTML = "";
@@ -342,11 +343,16 @@ document.addEventListener("DOMContentLoaded", function () {
           errorMsg.textContent = "";
       }
       
-      // Set grid parameters based on the length of binary data.
+      // Define margins and compute unit width
+      const leftMargin = 30;
+      const rightMargin = 10;
       binaryDataLength = binaryData.length;
-      currentUnitWidth = (width - 40) / binaryDataLength; // 30 (left margin) + 10 (right margin) = 40
+      currentUnitWidth = (width - (leftMargin + rightMargin)) / binaryDataLength;
       
+      // Clear canvas and draw grid/axes
       clearCanvas();
+      
+      // Start the animation for the selected technique
       const techniques = {
           "unipolar": drawUnipolar,
           "nrzl": drawNRZL,
@@ -364,6 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   }
   
+  
 
   function drawAxes() {
     const leftMargin = 30;
@@ -371,8 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const topMargin = 20;
     const bottomMargin = 20;
 
-    // Draw vertical grid lines exactly at bit boundaries
-    ctx.strokeStyle = "#888";  // Darker grid color for better visibility
+    // Draw vertical grid lines at bit boundaries:
+    ctx.strokeStyle = "#888";  // Darker grid color
     ctx.lineWidth = 1;
     for (let i = 0; i <= binaryDataLength; i++) {
         let x = leftMargin + i * currentUnitWidth;
@@ -382,40 +389,28 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.stroke();
     }
 
-    // (Optional) Draw horizontal grid lines matching typical voltage levels
-    // For example, if your waveform uses midY-50, midY, and midY+50:
-    ctx.beginPath();
-    ctx.moveTo(leftMargin, midY - 50);
-    ctx.lineTo(width - rightMargin, midY - 50);
-    ctx.stroke();
+    // (Optional) Draw horizontal grid lines if desired:
+    for (let y = topMargin; y <= height - bottomMargin; y += 50) {
+        ctx.beginPath();
+        ctx.moveTo(leftMargin, y);
+        ctx.lineTo(width - rightMargin, y);
+        ctx.stroke();
+    }
     
-    ctx.beginPath();
-    ctx.moveTo(leftMargin, midY);
-    ctx.lineTo(width - rightMargin, midY);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(leftMargin, midY + 50);
-    ctx.lineTo(width - rightMargin, midY + 50);
-    ctx.stroke();
-    
-    // Now draw axes over the grid
+    // Draw axes on top
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 2;
-    
-    // X-axis (Time)
     ctx.beginPath();
     ctx.moveTo(leftMargin, midY);
     ctx.lineTo(width - rightMargin, midY);
     ctx.stroke();
     
-    // Y-axis (Voltage)
     ctx.beginPath();
     ctx.moveTo(leftMargin, topMargin);
     ctx.lineTo(leftMargin, height - bottomMargin);
     ctx.stroke();
     
-    // Add labels
+    // Add axis labels
     ctx.font = "14px Arial";
     ctx.fillStyle = "#000";
     ctx.fillText("Time", width - rightMargin - 40, midY + 20);
@@ -426,6 +421,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillText("Voltage", 0, 0);
     ctx.restore();
 }
+
 
 
 
