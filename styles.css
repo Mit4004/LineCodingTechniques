@@ -91,20 +91,22 @@ body {
   }
   
   /* Canvas Section */
-  .canvas-container {
-    margin: 20px 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-  
-  canvas {
-    display: block !important;
-    width: 700px !important;
-    height: 250px !important;
-    background-color: #fff !important;
-    border: 2px solid #333;
-  }
+.canvas-container {
+  margin: 20px 0;
+  width: 100%;
+  max-width: 700px;  /* Set a maximum width */
+  display: flex;
+  justify-content: center;
+}
+
+canvas {
+  display: block;
+  width: 100%;   /* Canvas will fill the container */
+  height: auto;  /* Maintains the aspect ratio */
+  background-color: #fff;
+  border: 2px solid #333;
+}
+
   
   /* Info Box */
   .info-section {
