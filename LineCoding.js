@@ -138,6 +138,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   
+  
     // NRZ‑L
     function drawNRZL(binaryData, index, callback, animId) {
       const leftMargin = 30;
@@ -148,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
       drawLine(x, prevY, x, y, () =>
           drawLine(x, y, x + unitWidth, y, callback, animId), animId);
   }
+  
   
   
     // NRZ‑I
@@ -162,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   
+  
     // Manchester Encoding
     function drawManchester(binaryData, index, callback, animId) {
       const leftMargin = 30;
@@ -169,7 +172,6 @@ document.addEventListener("DOMContentLoaded", function () {
       let x = leftMargin + index * unitWidth;
       const high = midY - 50;
       const low = midY + 50;
-      
       if (binaryData[index] === "1") {
           // For a '1': first half at high level, then vertical drop to low.
           drawLine(x, high, x + unitWidth / 2, high, () => {
@@ -186,6 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }, animId);
       }
   }
+  
   
   
   
@@ -217,6 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   
+  
     // AMI
     function drawAMI(binaryData, index, callback, animId) {
       const leftMargin = 30;
@@ -226,22 +230,19 @@ document.addEventListener("DOMContentLoaded", function () {
       for (let i = 0; i <= index; i++) {
           if (binaryData[i] === "1") onesCount++;
       }
-      let y = binaryData[index] === "1"
-          ? (onesCount % 2 === 1 ? midY - 50 : midY + 50)
-          : midY;
+      let y = binaryData[index] === "1" ? (onesCount % 2 === 1 ? midY - 50 : midY + 50) : midY;
       let prevY = midY;
       if (index > 0) {
           onesCount = 0;
           for (let i = 0; i < index; i++) {
               if (binaryData[i] === "1") onesCount++;
           }
-          prevY = binaryData[index - 1] === "1"
-            ? (onesCount % 2 === 1 ? midY - 50 : midY + 50)
-            : midY;
+          prevY = binaryData[index - 1] === "1" ? (onesCount % 2 === 1 ? midY - 50 : midY + 50) : midY;
       }
       drawLine(x, prevY, x, y, () =>
           drawLine(x, y, x + unitWidth, y, callback, animId), animId);
   }
+  
   
   
     // Pseudoternary
@@ -255,22 +256,19 @@ document.addEventListener("DOMContentLoaded", function () {
               if (binaryData[i] === "0") zerosCount++;
           }
       }
-      let y = binaryData[index] === "0"
-          ? (zerosCount % 2 === 1 ? midY - 50 : midY + 50)
-          : midY;
+      let y = binaryData[index] === "0" ? (zerosCount % 2 === 1 ? midY - 50 : midY + 50) : midY;
       let prevY = midY;
       if (index > 0) {
           zerosCount = 0;
           for (let i = 0; i < index; i++) {
               if (binaryData[i] === "0") zerosCount++;
           }
-          prevY = binaryData[index - 1] === "0"
-            ? (zerosCount % 2 === 1 ? midY - 50 : midY + 50)
-            : midY;
+          prevY = binaryData[index - 1] === "0" ? (zerosCount % 2 === 1 ? midY - 50 : midY + 50) : midY;
       }
       drawLine(x, prevY, x, y, () =>
           drawLine(x, y, x + unitWidth, y, callback, animId), animId);
   }
+  
   
   
     // HDB3 (Simplified)
@@ -287,28 +285,29 @@ document.addEventListener("DOMContentLoaded", function () {
           y = (onesCount % 2 === 1) ? midY - 50 : midY + 50;
       } else {
           if (index >= 3 && binaryData.slice(index - 3, index + 1) === "0000") {
-            let onesCount = 0;
-            for (let i = 0; i < index; i++) {
-              if (binaryData[i] === "1") onesCount++;
-            }
-            y = (onesCount % 2 === 1) ? midY + 50 : midY - 50;
+              let onesCount = 0;
+              for (let i = 0; i < index; i++) {
+                  if (binaryData[i] === "1") onesCount++;
+              }
+              y = (onesCount % 2 === 1) ? midY + 50 : midY - 50;
           }
       }
       let prevY = midY;
       if (index > 0) {
           if (binaryData[index - 1] === "1") {
-            let onesCount = 0;
-            for (let i = 0; i < index; i++) {
-              if (binaryData[i] === "1") onesCount++;
-            }
-            prevY = (onesCount % 2 === 1) ? midY - 50 : midY + 50;
+              let onesCount = 0;
+              for (let i = 0; i < index; i++) {
+                  if (binaryData[i] === "1") onesCount++;
+              }
+              prevY = (onesCount % 2 === 1) ? midY - 50 : midY + 50;
           } else {
-            prevY = midY;
+              prevY = midY;
           }
       }
       drawLine(x, prevY, x, y, () =>
           drawLine(x, y, x + unitWidth, y, callback, animId), animId);
   }
+  
   
   
     // --- Update Info Box ---
@@ -328,6 +327,10 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // --- Update function: validate input, run animation, and update info ---
     function update() {
+      const leftMargin = 30;
+      const rightMargin = 10;
+      binaryDataLength = binaryData.length;
+      currentUnitWidth = (width - (leftMargin + rightMargin)) / binaryDataLength;
       currentAnim++; // Cancel ongoing animations
       const binaryData = inputField.value.trim();
       if (!/^[01]+$/.test(binaryData) || binaryData === "") {
@@ -363,53 +366,67 @@ document.addEventListener("DOMContentLoaded", function () {
   
 
   function drawAxes() {
-    // Darker grid color for better visibility in the downloaded image
-    ctx.strokeStyle = "#666";  
-    ctx.lineWidth = 0.7;
+    const leftMargin = 30;
+    const rightMargin = 10;
+    const topMargin = 20;
+    const bottomMargin = 20;
 
-    // Vertical grid lines
-    for (let x = 30; x < width; x += 50) {
-        ctx.beginPath();
-        ctx.moveTo(x, 20);
-        ctx.lineTo(x, height - 20);
-        ctx.stroke();
-    }
-    
-    // Horizontal grid lines
-    for (let y = 20; y < height; y += 50) {
-        ctx.beginPath();
-        ctx.moveTo(30, y);
-        ctx.lineTo(width - 10, y);
-        ctx.stroke();
-    }
-
-    // Draw axes
-    ctx.strokeStyle = "#000";  // Ensure axes are black
+    // Draw vertical grid lines exactly at bit boundaries
+    ctx.strokeStyle = "#888";  // Darker grid color for better visibility
     ctx.lineWidth = 1;
+    for (let i = 0; i <= binaryDataLength; i++) {
+        let x = leftMargin + i * currentUnitWidth;
+        ctx.beginPath();
+        ctx.moveTo(x, topMargin);
+        ctx.lineTo(x, height - bottomMargin);
+        ctx.stroke();
+    }
+
+    // (Optional) Draw horizontal grid lines matching typical voltage levels
+    // For example, if your waveform uses midY-50, midY, and midY+50:
+    ctx.beginPath();
+    ctx.moveTo(leftMargin, midY - 50);
+    ctx.lineTo(width - rightMargin, midY - 50);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(leftMargin, midY);
+    ctx.lineTo(width - rightMargin, midY);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(leftMargin, midY + 50);
+    ctx.lineTo(width - rightMargin, midY + 50);
+    ctx.stroke();
+    
+    // Now draw axes over the grid
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
     
     // X-axis (Time)
     ctx.beginPath();
-    ctx.moveTo(30, midY);
-    ctx.lineTo(width - 10, midY);
+    ctx.moveTo(leftMargin, midY);
+    ctx.lineTo(width - rightMargin, midY);
     ctx.stroke();
-
+    
     // Y-axis (Voltage)
     ctx.beginPath();
-    ctx.moveTo(30, 20);
-    ctx.lineTo(30, height - 20);
+    ctx.moveTo(leftMargin, topMargin);
+    ctx.lineTo(leftMargin, height - bottomMargin);
     ctx.stroke();
-
-    // Add axis labels
+    
+    // Add labels
     ctx.font = "14px Arial";
     ctx.fillStyle = "#000";
-    ctx.fillText("Time", width - 50, midY + 20);
-
+    ctx.fillText("Time", width - rightMargin - 40, midY + 20);
+    
     ctx.save();
     ctx.translate(10, height / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.fillText("Voltage", 0, 0);
     ctx.restore();
 }
+
 
 
   // Function to Download the grapgh as an image
