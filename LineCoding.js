@@ -55,9 +55,14 @@ document.addEventListener("DOMContentLoaded", function () {
   
     // Clear the canvas
     function clearCanvas() {
-      ctx.clearRect(0, 0, width, height);
-      drawAxes(); // Ensure axes are drawn after clearing
-  }
+      // Fill the entire canvas with white
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
+    
+      // Now draw your axes/grid on top
+      drawAxes();
+    }
+    
   
   
     // Draw a line segment with a short delay
